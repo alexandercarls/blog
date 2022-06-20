@@ -114,13 +114,31 @@
                    (path/basename))]
     {:path post-path
      :slug slug
-     :html templated-html}))
+     :html templated-html
+     :frontmatter frontmatter}))
+
+(defn build-index-page [data]
+  [:ul.mt-3
+   (for [{:keys [frontmatter slug]} data]
+     [:li.relative.bg-white.py-5.px-4.hover:bg-gray-50.focus-within:ring-2.focus-within:ring-inset.focus-within:ring-indigo-600
+      {:key slug}
+      [:div.flex-col.md:flex-row.flex.md:justify-between.md:items-center
+       [:div.min-w-0.flex-1
+        [:a.block.focus:outline-none
+         {:href slug}
+         [:span.absolute.inset-0]]
+        [:p.text-sm.font-medium.text-gray-900.truncate
+         (:title frontmatter)]]
+       [:time.flex-shrink-0.whitespace-nowrap.text-xs.text-gray-500
+        {:date-time (.toISOString (:published-at frontmatter))}
+        (date->human (:published-at frontmatter))]]])])
 
 (defn build []
   (fs.emptyDir dist-folder)
   (p/let [posts (glob "posts/**/*.md")
           posts (js->clj posts)
           posts (p/all (map process-post-path posts))
+          posts (sort-by #(- (:published-at (:frontmatter %))) posts)
           _ (p/all
              (map (fn [p] (let [post-path (:path p)
                                 destfolder (path/join dist-folder (:slug p))]
@@ -128,8 +146,11 @@
                               (fs.emptyDir destfolder)
                               (fs.copy (path/dirname post-path) destfolder)
                               (fs.remove (path/join destfolder "index.md"))
-                              (fs.writeFile (path/join destfolder "index.html") (:html p))))) posts))]
-    posts))
+                              (fs.writeFile (path/join destfolder "index.html") (:html p))))) posts))
+          index-page (build-index-page posts) 
+          index-page (srv/render-to-static-markup index-page)
+          index-page (make-templated-html "Index" index-page)]
+    (fs.writeFile (path/join dist-folder "index.html") index-page)))
 
 (build)
 
