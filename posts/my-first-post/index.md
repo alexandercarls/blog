@@ -12,7 +12,7 @@ This document is a playground for testing our implementation.
 
 ## Code Highlightng
 
-```javascript
+```javascript {% highlight="1,4" %}
 const name = "Luke Skywalker";
 
 function sayHello(name) {
