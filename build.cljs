@@ -14,6 +14,7 @@
             [applied-science.js-interop :as j]
             [promesa.core :as p]))
 
+(def site-url "http://www.alexandercarls.de/")
 (def dist-folder "dist")
 (def template (fs.readFileSync "template.html" "utf8"))
 
@@ -133,6 +134,23 @@
         {:date-time (.toISOString (:published-at frontmatter))}
         (date->human (:published-at frontmatter))]]])])
 
+(defn build-rss-feed [posts]
+  (str "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
+        <rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">
+         <channel>
+          <title>Blog - Alexander Carls</title>
+          <description>Blog</description>
+          <link>" site-url "</link>
+       <atom:link href=\"" site-url "rss.xml\" rel=\"self\" type=\"application/rss+xml\" />"
+       (apply str (map #(str "<item>
+            <guid>" site-url (:slug %) "</guid>
+            <title>" (get-in % [:frontmatter :title]) "</title>
+            <link>" site-url (:slug %) "</link>
+            <pubDate>" (.toUTCString (get-in % [:frontmatter :published-at])) "</pubDate>
+          </item>") posts))
+       "</channel>
+</rss>"))
+
 (defn build []
   (fs.emptyDir dist-folder)
   (p/let [posts (glob "posts/**/*.md")
@@ -147,10 +165,11 @@
                               (fs.copy (path/dirname post-path) destfolder)
                               (fs.remove (path/join destfolder "index.md"))
                               (fs.writeFile (path/join destfolder "index.html") (:html p))))) posts))
-          index-page (build-index-page posts) 
+          index-page (build-index-page posts)
           index-page (srv/render-to-static-markup index-page)
-          index-page (make-templated-html "Index" index-page)]
-    (fs.writeFile (path/join dist-folder "index.html") index-page)))
+          index-page (make-templated-html "Alexander Carls" index-page)]
+    (fs.writeFile (path/join dist-folder "index.html") index-page)
+    (fs.writeFile (path/join dist-folder "rss.xml") (build-rss-feed posts))))
 
 (build)
 
