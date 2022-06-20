@@ -19,6 +19,7 @@
   "homepage": "https://github.com/alexandercarls/blog#readme",
   "dependencies": {
     "@markdoc/markdoc": "^0.1.3",
+    "@sindresorhus/slugify": "^2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zx": "^7.0.0"
