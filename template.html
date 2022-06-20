@@ -1,11 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ TITLE }}</title>
-  </head>
-  <body>
-    {{ CONTENT }}
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ TITLE }}</title>
+  <link href="../output.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="w-full border-b border-slate-900/10">
+    <div class="max-w-7xl mx-auto">
+      <div class="py-4 lg:px-8 px-4">
+        <div class="flex items-center justify-between">
+          <a class="mr-3 font-mono text-slate-400 hover:text-slate-500 hover:underline decoration-wavy decoration-red-600 underline-offset-[5px]"
+            href="/">
+            Alexander Carls
+          </a>
+          <div class="flex gap-2">
+            <a href="https://github.com/alexandercarls/blog" class="block text-slate-400 hover:text-slate-500">
+              <svg viewBox="0 0 16 16" class="w-5 h-5" fill="currentColor">
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                </path>
+              </svg>
+            </a>
+            <a href="/rss.xml" class="block text-slate-400 hover:text-slate-500">
+              <svg viewBox="0 0 461.4 461.4" class="w-5 h-5" style="enable-background:new 0 0 461.432 461.432"
+                fill="currentColor">
+                <path
+                  d="M126 399a61 61 0 1 1-122 0 61 61 0 0 1 122 0zM0 230c0 8 7 15 15 15 60 4 101 25 138 63 37 37 60 90 64 138 1 8 8 14 16 14h57a16 16 0 0 0 16-16A299 299 0 0 0 17 157a16 16 0 0 0-17 16v57z" />
+                <path
+                  d="M0 73c0 9 7 16 15 16 194 8 351 162 358 356 1 9 8 15 16 15h57a16 16 0 0 0 15-16A456 456 0 0 0 16 1 16 16 0 0 0 0 17v56z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="overflow-hidden">
+    <div class="px-4 sm:px-6 md:px-8">
+      <div class="max-w-3xl mx-auto pb-28">
+        <main>
+          {{ CONTENT }}
+        </main>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>
