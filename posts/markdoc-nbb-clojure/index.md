@@ -624,7 +624,7 @@ Let's reference the CSS file from our `template.html` file and adjust the stylin
     <div class="max-w-7xl mx-auto">
       <div class="py-4 lg:px-8 px-4">
         <div class="flex items-center justify-between">
-          <a class="mr-3 font-mono text-slate-400 hover:text-slate-500 hover:underline decoration-wavy decoration-red-600 underline-offset-[5px]"
+          <a class="mr-3 font-mono text-slate-400 hover:text-slate-500"
             href="/">
             Alexander Carls
           </a>
