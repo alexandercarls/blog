@@ -82,7 +82,7 @@
 (defn markdown-to-react-elements [markdown]
   (let [ast (markdoc/parse markdown)
         frontmatter (parse-fronmatter ast)
-        rendertree (markdoc/transform ast (clj->js {:variables frontmatter
+        rendertree (markdoc/transform ast (clj->js {:variables frontmatter 
                                                     :functions {:toHumanDate md-to-human-date}
                                                     :nodes {:heading node-heading
                                                             :fence node-fence}}))
@@ -104,7 +104,8 @@
     [:dl
      [:dd.absolute.top-0.inset-x-0.text-slate-700
       [:time {:date-time (.toISOString date)} (date->human date)]]]]
-   [:div.prose.prose-slate.max-w-none content]])
+   [:div.prose.prose-slate.max-w-none content]
+   [:script {:src "https://utteranc.es/client.js", :repo "alexandercarls/blog", "issue-term" "pathname", :theme "github-light", :cross-origin "anonymous", :async true}]])
 
 (defn process-post-path [post-path]
   (p/let [post (slurp post-path)
