@@ -1002,7 +1002,7 @@ As an avid RSS feed consumer, I think that every content-producing website must 
   (str "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
         <rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">
          <channel>
-          <title>Blog - Alexander Carls</title>
+          <title>Alexander Carls</title>
           <description>Blog</description>
           <link>" site-url "</link>
        <atom:link href=\"" site-url "rss.xml\" rel=\"self\" type=\"application/rss+xml\" />"
