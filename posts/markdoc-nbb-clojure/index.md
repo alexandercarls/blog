@@ -11,11 +11,11 @@
 
 - Create a minimalistic blogging site to get started blogging about my Clojure journey.
 - Write blog posts in Markdown
-- Use functionality from [MarkDoc](https://markdoc.io) with React
+- Use functionality from [MarkDoc](https://markdoc.io) with [React](https://reactjs.org)
 - [Tailwind CSS](https://tailwindcss.com/)
 - Create static HTML for each Markdown post.
 - Deploy with [Netlify](https://www.netlify.com).
-- Must work without JavaScript on the Browser
+- Must work without JavaScript on the browser
 - RSS Feed
 - Comments support with GitHub
 - No CI/CD. Given the short scope of the project. Running commands on my local machine is OK.
@@ -33,7 +33,7 @@ Aside from my "normal" programming experience, regarding Clojure, I have done:
 - the [integrated guide from the Calva editor](https://calva.io/getting-started/#theres-a-getting-started-repl)
 - watched countless of Clojure related videos
 
-From various YouTube Videos, I discovered [nbb](https://github.com/babashka/nbb) and [babashka](https://github.com/babashka/babashka) for Clojure(Script) scripting.
+From various YouTube Videos, I discovered [nbb](https://github.com/babashka/nbb) for Clojure(Script) scripting.
 
 For me, scripting is the perfect middle ground when going from small book exercises to more significant projects while learning the language. I'd argue that a static site book is on the larger side of "scripting".
 
@@ -184,7 +184,7 @@ nbb build.cljs
 # prints ["posts/a-second-post/index.md" "posts/my-first-post/index.md"]
 ```
 
-I also used the function [js->clj](https://cljs.github.io/api/cljs.core/js-GTclj) to convert the JavaScript array to a Clojure vector. The [#js literal](https://cljs.github.io/api/syntax/#js-literal) from the previous output is gone.
+I used the function [js->clj](https://cljs.github.io/api/cljs.core/js-GTclj) to convert the JavaScript array to a Clojure vector. The [#js literal](https://cljs.github.io/api/syntax/#js-literal) from the previous output is gone.
 
 We can also continue using the `p/let` macro for non-promise bindings.
 
@@ -252,7 +252,8 @@ Let's implement the [rendering pipeline from MarkDoc](https://markdoc.io/docs/re
   )
 ```
 
-This was the technical breakthrough from reading files to outputting HTML. 
+This was the technical breakthrough from reading files to outputting HTML.
+
 MarkDoc has two built-in renderers
 1. HTML
 2. React
@@ -286,9 +287,10 @@ promise1.then(console.log)
 
 ```
 
-The `3` gets logged before we log all the contents from the `Promise.all` call.
+The `3` gets logged before we log all the contents from the `Promise.all` call. This doesn't matter for a personal blog. We are not processing hundreds of posts any time soon.
 
 > Good to know. Promises are evaluated eagerly. Meaning regardless of using `await` or `then`. As soon as they are constructed, they run.
+
 
 We end up with the following
 
@@ -352,10 +354,10 @@ Create the `template.html` file at the root level of the project with the follow
 
 Note the variable "bits" that we need to replace.
 
-Adjustments:
+**Adjustments**
 1. Load the template file
 2. Replace "{{ CONTENT }}" with the post HTML. We will handle "{{ TITLE }}" later.
-3. Write Blog Post to a new "dist" folder
+3. Write the posts to a new "dist" folder
 
 ```clojure
 (ns build
@@ -410,11 +412,11 @@ Adjustments:
 ```
 
 **Some notes**
-- I decided not to use `slurp` for reading the template. Instead, I used the `Sync` method.
+- I decided not to use `slurp` for reading the template. Instead, I used the `Sync` method. I don't want to handle the `Promise` of it at every step.
 - `process-post-path` is returning a map instead of just HTML
 - To keep all blog-related assets, we need to copy the whole "post" folder to `dist`
 - [fs.emptyDir](https://github.com/jprichardson/node-fs-extra/blob/master/docs/emptyDir.md#emptydirdir-callback) also creates the directory if it does not exist
-- For the most part, if you see a JavaScript import like `import React from 'react'` you need to use the `$default` import. If you see `import { Component } from 'react'` you don't need it and can `:refer [Component]` instead. There are exceptions, especially when throwing CommonJS Modules into the mix. For ease of mind, the complexity wasn't added by ClojureScript.
+- For the most part, if you see a JavaScript import like `import React from 'react'` you need to use the `$default` import. If you see `import { Component } from 'react'` you don't need it and can `:refer [Component]` instead. There are exceptions to that rule, especially when throwing CommonJS modules into the mix. For ease of mind, the complexity wasn't added by ClojureScript.
 
 The Post HTML is now correctly embedded. We now have a fully working Page, e.g. `a-second-post.
 
@@ -468,7 +470,6 @@ Prepend each blog post with Frontmatter, and adjust the `#` (h1) and the "Publis
 We also use a [custom function](https://markdoc.io/docs/functions) `toHumanDate` and add a class `.published-at` [annotation](https://markdoc.io/docs/syntax#annotations) to a `p` node.
 
 The `:published-at` value uses the edn built-in tagged element [#inst "rfc-3339-format"](https://github.com/edn-format/edn#inst-rfc-3339-format). This will yield us a [JavaScript Date object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) when reading the edn string.
-
 
 ````markdown
 ---
@@ -555,7 +556,7 @@ Worked! "A Second Post" now looks like this
 - We enriched the `markdoc/transform` function with additional info about Frontmatter as variables and the `md-to-human-date` map as a function.
 - `markdown-to-html` now returns a tuple HTML and Frontmatter. We then used array destructuring in a let binding ` [article-html frontmatter] (markdown-to-html source)`.
 - We have come across more JavaScript interop via the library [js-interop](https://github.com/applied-science/js-interop). And again, the [#](https://cljs.github.io/api/syntax/js-literal)js literal](https://cljs.github.io/api/syntax/js-literal). The literal shallow converts the data structure to JavaScript. We could also have used the `js->clj` macro. And finally the [. special form](https://cljs.github.io/api/cljs.core/DOT). At the beginning of my journey, I forgot several times that you could not do `instance.method` or get map keys via `.` chaining and need to use `get` etc.
-- One learning for me is probably to stick with simple `let` bindings in the beginning and clean it up with threading macros afterward for debugging purposes etc. I constantly shifted around threading macros.
+- One learning for me is to stick with simple `let` bindings in the beginning and clean it up with threading macros afterward for debugging purposes etc. I constantly shifted around, adding and removing threading macros.
 
 I occasionally insert one of the following statements for debugging at various places.
 
@@ -925,7 +926,7 @@ Good enough
 
 ## Add a Dev HTTP Server
 
-Currently, we open the HTML file via our Browser directly from the file system.
+Currently, we open the HTML file via our browser directly from the file system.
 
 The URL looks like this `[...]/my-first-post/index.html` This is not a good URL to publish to the internet
 and certainly not what most web servers do by default.
