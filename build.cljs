@@ -14,7 +14,7 @@
             [applied-science.js-interop :as j]
             [promesa.core :as p]))
 
-(def site-url "http://www.alexandercarls.de/")
+(def site-url "https://www.alexandercarls.de/")
 (def dist-folder "dist")
 (def template (fs.readFileSync "template.html" "utf8"))
 

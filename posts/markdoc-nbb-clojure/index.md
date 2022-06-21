@@ -39,7 +39,7 @@ For me, scripting is the perfect middle ground when going from small book exerci
 
 This post is more or less a step-by-step blog post about how I built this blog you are reading.
 
-I am unsure if this even helps anyone. However, I would argue that I would probably not have done it if it wasn't for the step-by-step progress, with small course corrections along the way.
+I am unsure if this even helps anyone. However, I would probably not have done it if it wasn't for the step-by-step progress, with small course corrections along the way.
 
 This post assumes that you are working with macOS. The dependencies should be simple to install for your operating system of choice. A POSIX-compliant shell for the scripts is required.
 
@@ -226,8 +226,8 @@ Let's implement the [rendering pipeline from MarkDoc](https://markdoc.io/docs/re
 2. Transform the AST to a Renderable Tree
 3. Render the Tree to HTML
 
-```clojure
-(ns build {% highlight="3,11,12,13,15" %}
+```clojure {% highlight="3,11,12,13,15" %}
+(ns build 
   (:require ["zx" :refer [glob]]
             ["@markdoc/markdoc$default" :as markdoc]
             [nbb.core :refer [slurp await]]
@@ -356,7 +356,7 @@ Note the variable "bits" that we need to replace.
 
 **Adjustments**
 1. Load the template file
-2. Replace "{{ CONTENT }}" with the post HTML. We will handle "{{ TITLE }}" later.
+2. Replace `{{ CONTENT }}` with the post HTML. We will handle `{{ TITLE }}` later.
 3. Write the posts to a new "dist" folder
 
 ```clojure
@@ -418,7 +418,7 @@ Note the variable "bits" that we need to replace.
 - [fs.emptyDir](https://github.com/jprichardson/node-fs-extra/blob/master/docs/emptyDir.md#emptydirdir-callback) also creates the directory if it does not exist
 - For the most part, if you see a JavaScript import like `import React from 'react'` you need to use the `$default` import. If you see `import { Component } from 'react'` you don't need it and can `:refer [Component]` instead. There are exceptions to that rule, especially when throwing CommonJS modules into the mix. For ease of mind, the complexity wasn't added by ClojureScript.
 
-The Post HTML is now correctly embedded. We now have a fully working Page, e.g. `a-second-post.
+The Post HTML is now correctly embedded. We now have a fully working Page, e.g. `a-second-post.`
 
 ```html
 <!DOCTYPE html>
@@ -556,7 +556,7 @@ Worked! "A Second Post" now looks like this
 - We enriched the `markdoc/transform` function with additional info about Frontmatter as variables and the `md-to-human-date` map as a function.
 - `markdown-to-html` now returns a tuple HTML and Frontmatter. We then used array destructuring in a let binding ` [article-html frontmatter] (markdown-to-html source)`.
 - We have come across more JavaScript interop via the library [js-interop](https://github.com/applied-science/js-interop). And again, the [#](https://cljs.github.io/api/syntax/js-literal)js literal](https://cljs.github.io/api/syntax/js-literal). The literal shallow converts the data structure to JavaScript. We could also have used the `js->clj` macro. And finally the [. special form](https://cljs.github.io/api/cljs.core/DOT). At the beginning of my journey, I forgot several times that you could not do `instance.method` or get map keys via `.` chaining and need to use `get` etc.
-- One learning for me is to stick with simple `let` bindings in the beginning and clean it up with threading macros afterward for debugging purposes etc. I constantly shifted around, adding and removing threading macros.
+- One learning for me is to stick with simple `let` bindings in the beginning and clean it up with threading macros when I am done. I constantly shifted around, adding and removing threading macros when debugging.
 
 I occasionally insert one of the following statements for debugging at various places.
 
@@ -599,6 +599,8 @@ EOF
 ```shell
 npx tailwindcss -i ./base.css -o ./dist/output.css --watch
 ```
+
+> npx is the [Node.js Package Runner](https://nodejs.dev/learn/the-npx-nodejs-package-runner)
 
 If you inspect the `output.css` file you can see foundational styles.
 
@@ -684,7 +686,7 @@ I used both of the following HTML to Hiccup online converters when I was unsure 
 - [htmltohiccup.herokuapp.com](https://htmltohiccup.herokuapp.com/)
 
 
-```clojure {% highlight="17,36" %}
+```clojure {% highlight="19,30" %}
 ;; Require these dependencies
 ["react$default" :as React]
 [reagent.dom.server :as srv]
@@ -728,16 +730,16 @@ I used both of the following HTML to Hiccup online converters when I was unsure 
 - Most of the styling work is done with the `prose` class from the [@tailwindcss/typography](https://tailwindcss.com/docs/typography-plugin) plugin. 
 - We changed the MarkDoc renderer from HTML to React, and now return React Elements instead of plain HTML
 - Used the Reagent version of [ReactDOMServer.renderToStaticMarkup(element)](https://reactjs.org/docs/react-dom-server.html#rendertostaticmarkup)
-- To be honest, at first, I was unsure if I like chaining the classes on the elements with Hiccup `:article.relative.pt-8.mt-6.`. Now I am okay-ish with it. An alternative syntax for applying classes would be this `[:article {:class "relative pt-8 mt-6"} "..."]`
+- To be honest, at first, I was unsure if I like chaining the classes on the elements with Hiccup `:article.relative.pt-8.mt-6.`. After spending some time with the syntax, I am feeling okay-ish with it. An alternative syntax for applying classes would be this `[:article {:class "relative pt-8 mt-6"} "..."]`
 
 ![](post-layout.jpeg)
 
 ## Add React components
 
 Now that we are using the React renderer, it's time to add some React components.
-We don't use this for interactivity on the client-side, we use it for encapsulation and some components from the React ecosystem. Keep in mind we are rendering static markup and don't hydrate on the client with this blog post.
+We don't use this for interactivity on the client-side, we use it for encapsulation and being able to use components from the React ecosystem. Keep in mind we are rendering static markup and don't hydrate on the client with this blog post.
 
-In both cases, we are [customizing existing MarkDoc nodes](https://markdoc.io/docs/nodes#customizing-markdoc-nodes).
+With the following components, we are [customizing existing MarkDoc nodes](https://markdoc.io/docs/nodes#customizing-markdoc-nodes).
 
 ### Heading
 
@@ -997,7 +999,7 @@ As an avid RSS feed consumer, I think that every content-producing website must 
 
 
 ```clojure
-(def site-url "http://www.alexandercarls.de/")
+(def site-url "https://www.alexandercarls.de/")
 
 (defn build-rss-feed [posts]
   (str "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
@@ -1024,17 +1026,17 @@ Clicking on the top right RSS icon works now.
 Also, add the following to the `template.html` file. I heard that this helps some RSS feed readers with the discovery.
 
 ```html
- <link rel="alternate" type="application/rss+xml" title="Alexander Carls Blog Feed" href="http://alexandercarls.de/rss.xml" />
+ <link rel="alternate" type="application/rss+xml" title="Alexander Carls Blog Feed" href="https://alexandercarls.de/rss.xml" />
  ```
 
 ## Comment System
 
-Let's add [utteranc.es](https://utteranc.es) for our comment system. Aside from the many other benefits listed at their page,
+Let's use [utteranc.es](https://utteranc.es) for our comment system. Aside from the many other benefits listed on their page,
 the main selling point for me is that comments are stored in the repository with GitHub issues.
 
 The installation steps are also simple to follow.
 
-Let's add the script to the post-layout.
+Add the script to the post-layout.
 
 ```clojure {% highlight="8" %}
 (defn post-layout [date content]
