@@ -13,14 +13,14 @@
 <details>
     <summary><b>Run</b></summary>
 
-1.  Create a local configuration file from the example.
-    ```shell
-    nbb build.cljs
-    ```
-
-2. Instal dependencies
+1. Install dependencies
     ```shell
     npm i
+    ```
+
+2.  Build
+    ```shell
+    nbb build.cljs
     ```
 
 3. Start the HTTP Server
