@@ -35,7 +35,7 @@ Aside from my "normal" programming experience, regarding Clojure, I have done:
 
 From various YouTube Videos, I discovered [nbb](https://github.com/babashka/nbb) for Clojure(Script) scripting.
 
-For me, scripting is the perfect middle ground when going from small book exercises to more significant projects while learning the language. I'd argue that a static site book is on the larger side of "scripting".
+For me, scripting is the perfect middle ground when going from small book exercises to more significant projects while learning the language. I'd argue that a static site generation is on the larger side of "scripting".
 
 This post is more or less a step-by-step blog post about how I built this blog you are reading.
 
@@ -378,9 +378,9 @@ Note the variable "bits" that we need to replace.
       (markdoc/renderers.html)))
 
 (defn make-templated-html [title content]
-  (as-> title $
-    (str/replace template "{{ TITLE }}" $)
-    (str/replace $ "{{ CONTENT }}" content)))
+  (-> template
+      (str/replace "{{ TITLE }}" title)
+      (str/replace "{{ CONTENT }}" content)))
 
 (defn process-post-path [post-path]
   (p/let [post (slurp post-path)
@@ -701,9 +701,9 @@ I used both of the following HTML to Hiccup online converters when I was unsure 
     [react-elements frontmatter]))
 
 (defn make-templated-html [title content]
-  (as-> title $
-    (str/replace template "{{ TITLE }}" $)
-    (str/replace $ "{{ CONTENT }}" content)))
+  (-> template
+      (str/replace "{{ TITLE }}" title)
+      (str/replace "{{ CONTENT }}" content)))
 
 (defn post-layout [date content]
   [:article.relative.pt-8.mt-6

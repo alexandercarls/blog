@@ -94,9 +94,9 @@
     [react-elements frontmatter]))
 
 (defn make-templated-html [title content]
-  (as-> title $
-    (str/replace template "{{ TITLE }}" $)
-    (str/replace $ "{{ CONTENT }}" content)))
+  (-> template
+      (str/replace "{{ TITLE }}" title)
+      (str/replace "{{ CONTENT }}" content)))
 
 (defn post-layout [date content]
   [:article.relative.pt-8.mt-6
